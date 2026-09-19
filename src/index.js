@@ -60,6 +60,6 @@ app.get("/api/tasks/:id",(req,res)=>{
   res.json(task);
 });
 
-app.get("*", (_req,res)=>res.sendFile("index.html",{root:"public"}));
+app.get("/{*splat}", (_req,res)=>res.sendFile("index.html",{root:"public"}));
 
 app.listen(port,()=>console.log(`AI OS running on http://localhost:${port}`));

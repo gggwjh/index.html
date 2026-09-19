@@ -107,12 +107,25 @@ async function executeTask(task){
     if(!response.ok)throw new Error("Engine HTTP "+response.status+": "+(typeof data==="string"?data:JSON.stringify(data)));
     task.status="completed";task.completedAt=new Date().toISOString();task.result=clampResult(normalizeResult(data));task.error=null;
   }catch(error){
-    task.status=error.name==="AbortError"?"timeout":"failed";
-    task.error=String(error?.message||error).slice(0,2000);
+    const message=String(error?.message||error).slice(0,2000);
+    const transient=error?.name==="AbortError" || /^Engine HTTP 5\d\d:/.test(message) || /fetch failed|network|ECONN|ETIMEDOUT|EAI_AGAIN/i.test(message);
+    if(transient && (task.attempts||0)<maxRetries){
+      task.status="queued";
+      task.error=message;
+      task.attempts=(task.attempts||0)+1;
+      task.retryAt=new Date(Date.now()+Math.min(60000,1000*Math.pow(2,task.attempts))).toISOString();
+      await saveTask(task);
+      const delay=Math.min(60000,1000*Math.pow(2,task.attempts));
+      const retryTimer=setTimeout(()=>enqueue(task),delay);
+      retryTimer.unref?.();
+      return;
+    }
+    task.status=error?.name==="AbortError"?"timeout":"failed";
+    task.error=message;
     task.completedAt=new Date().toISOString();
   }finally{
     clearTimeout(timer);
-    await saveTask(task);
+    if(task.status!=="queued")await saveTask(task);
   }
 }
 async function drain(){
@@ -144,6 +157,8 @@ app.post("/api/tasks",requireAuth,async(req,res)=>{
   const engine=requested&&engines[requested]?requested:classify(prompt);
   const metadata=req.body?.metadata&&typeof req.body.metadata==="object"&&!Array.isArray(req.body.metadata)?req.body.metadata:{};
   await pruneTasks(maxTasks-1);
+  const current=await listTasks();
+  if(current.length>=maxTasks)return res.status(503).json({error:"task_store_full"});
   const task={id:crypto.randomUUID(),prompt,engine,status:"queued",createdAt:new Date().toISOString(),metadata,result:null,error:null,attempts:0};
   await saveTask(task);res.status(202).json(publicTask(task));enqueue(task);
 });

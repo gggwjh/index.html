@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ["ai-os/unified-platform-v1", "main"]
+    branches: ["ai-os/completion-v2", "main"]
   pull_request:
 
 jobs:
@@ -16,3 +16,6 @@ jobs:
           cache: npm
       - run: npm install
       - run: node --check src/index.js
+      - run: node --check src/store.js
+      - run: node --check src/auth.js
+      - run: npm test

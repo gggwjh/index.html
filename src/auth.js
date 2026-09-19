@@ -1,0 +1,2 @@
+export function authEnabled(){return Boolean(process.env.AI_OS_API_KEY)}
+export function requireAuth(req,res,next){if(!authEnabled())return next();const h=String(req.headers.authorization||"");const bearer=h.startsWith("Bearer ")?h.slice(7):"";const key=String(req.headers["x-api-key"]||bearer);if(key&&key===process.env.AI_OS_API_KEY)return next();return res.status(401).json({error:"authentication_required"})}

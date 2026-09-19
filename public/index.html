@@ -1,30 +1,26 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI OS — Unified AI Workspace</title>
-<link rel="stylesheet" href="/styles.css">
-</head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070809"><title>AI OS — Unified AI Workspace</title><link rel="stylesheet" href="/styles.css"></head>
 <body>
 <div class="shell">
   <aside class="sidebar">
     <div class="brand"><span class="dot"></span><div><b>AI OS</b><small>Unified Intelligence</small></div></div>
-    <nav><button class="active">⌂ <span>الرئيسية</span></button><button>✦ <span>المهام</span></button><button>◈ <span>المحركات</span></button><button>⚙ <span>الإعدادات</span></button></nav>
-    <div class="side-note"><b>5 Engines</b><span>نظام توجيه موحّد للمهام</span></div>
+    <nav><button class="active" data-view="home">⌂ <span>الرئيسية</span></button><button data-view="tasks">✦ <span>المهام</span></button><button data-view="engines">◈ <span>المحركات</span></button><button data-view="settings">⚙ <span>الإعدادات</span></button></nav>
+    <div class="side-note"><b>5 Engines</b><span>طبقة Orchestrator موحّدة فوق محركات متخصصة</span></div>
   </aside>
   <main>
-    <header><div><span class="eyebrow">UNIFIED AI WORKSPACE</span><h1>اعمل أي حاجة.<br><em>AI OS يتصرف.</em></h1></div><div class="health"><i></i> النظام جاهز</div></header>
-    <section class="hero-card">
-      <div class="hero-copy"><span class="pill">ORCHESTRATOR</span><h2>اكتب المطلوب<br>وسيتم اختيار المحرك تلقائيًا</h2><p>من البرمجة والأتمتة إلى البحث والـRAG والـBrowser Agents.</p></div>
-      <form id="taskForm" class="composer">
-        <textarea id="prompt" placeholder="مثال: ابنِ لي صفحة هبوط React لمتجر ملابس..."></textarea>
-        <div class="composer-row"><select id="engine"><option value="">تلقائي — AI OS يختار</option><option value="openhands">OpenHands — Coding</option><option value="browser_use">Browser Use — Web</option><option value="n8n">n8n — Automation</option><option value="dify">Dify — AI / RAG</option><option value="langgraph">LangGraph — Agents</option></select><button>تشغيل المهمة ↗</button></div>
-      </form>
+    <header><div><span class="eyebrow">UNIFIED AI WORKSPACE</span><h1>اعمل أي حاجة.<br><em>AI OS يتصرف.</em></h1></div><div class="health"><i></i><span id="healthText">جاري الفحص</span></div></header>
+    <section class="stats">
+      <div><span>إجمالي المهام</span><b id="total">—</b></div><div><span>قيد التنفيذ</span><b id="running">—</b></div><div><span>مكتملة</span><b id="completed">—</b></div><div><span>محركات متصلة</span><b id="configured">—</b></div>
     </section>
-    <section class="grid">
-      <div class="panel"><div class="panel-head"><h3>المحركات</h3><span id="engineCount">—</span></div><div id="engines" class="engine-list"></div></div>
-      <div class="panel"><div class="panel-head"><h3>آخر المهام</h3><button id="refresh">تحديث</button></div><div id="tasks" class="tasks"></div></div>
+    <section id="home" class="view active-view">
+      <section class="hero-card"><div class="hero-copy"><span class="pill">ORCHESTRATOR</span><h2>اكتب المطلوب<br>وسيتم اختيار المحرك تلقائيًا</h2><p>من البرمجة والأتمتة إلى البحث والـRAG والـBrowser Agents.</p></div>
+        <form id="taskForm" class="composer"><textarea id="prompt" maxlength="12000" placeholder="مثال: ابنِ لي صفحة هبوط React لمتجر ملابس..."></textarea><div class="composer-row"><select id="engine"><option value="">تلقائي — AI OS يختار</option><option value="openhands">OpenHands — Coding</option><option value="browser_use">Browser Use — Web</option><option value="n8n">n8n — Automation</option><option value="dify">Dify — AI / RAG</option><option value="langgraph">LangGraph — Agents</option></select><button>تشغيل المهمة ↗</button></div></form>
+      </section>
     </section>
+    <section id="engines" class="view"><div class="panel"><div class="panel-head"><h3>المحركات</h3><span id="engineCount">—</span></div><div id="enginesList" class="engine-list"></div></div></section>
+    <section id="tasks" class="view"><div class="panel"><div class="panel-head"><h3>كل المهام</h3><button id="refresh">تحديث</button></div><div id="tasksList" class="tasks"></div></div></section>
+    <section id="settings" class="view"><div class="panel settings"><div class="panel-head"><h3>الإعدادات</h3></div><label>مفتاح API (اختياري عند تشغيل AI_OS_API_KEY)<input id="apiKey" type="password" placeholder="أدخل المفتاح ثم احفظ"></label><div class="settings-actions"><button id="saveKey">حفظ على هذا الجهاز</button><button id="clearKey">مسح المفتاح</button></div><p>المفتاح يُحفظ في sessionStorage فقط ولا يُرسل إلا مع طلبات AI OS.</p></div></section>
   </main>
 </div>
 <script src="/app.js"></script>

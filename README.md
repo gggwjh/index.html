@@ -52,3 +52,17 @@ Then open `http://localhost:8787`.
 Use `docker-compose.prod.yml` for a persistent container volume and healthcheck. Put the service behind HTTPS/reverse proxy and set `AI_OS_API_KEY`.
 
 The repository is the control plane; the five upstream engines remain separate services and must be connected through their supported APIs/webhooks. Review the current license and terms of each upstream project before commercial multi-tenant deployment.
+
+
+## Release hardening
+- Production mode refuses to start without `AI_OS_API_KEY`.
+- `/ready` checks persistent storage for container orchestration.
+- Task execution is concurrency-limited and retry-limited.
+- Task persistence is serialized to prevent concurrent write loss.
+- Results are size-limited and old inactive tasks are pruned.
+- Malformed/oversized JSON requests return JSON errors.
+- Security headers include CSP and Permissions Policy.
+- CI includes an HTTP integration test covering health, authentication and task lifecycle.
+
+## Engine integration
+Engine URLs and credentials are intentionally server-side. AI OS does not invent or bundle the five upstream runtimes; each must expose a compatible HTTP endpoint. Paths are configurable through `.env`, so upstream API changes do not require changing the UI.

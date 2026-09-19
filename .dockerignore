@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log*
+.env
+.git
+.github
+data
+data-test
+.DS_Store
+README.md
+SECURITY.md
+test

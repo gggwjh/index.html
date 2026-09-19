@@ -31,7 +31,7 @@ async function submitTask(){
   try{const engine=$("#engine").value;const r=await api("/api/tasks",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({prompt,engine:engine||undefined})});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||"تعذر إنشاء المهمة")}$("#prompt").value="";await loadTasks();await loadMetrics();startPolling()}catch(e){alert(e.message)}finally{button.disabled=false;button.textContent="تشغيل المهمة ↗"}
 }
 async function retryTask(id){try{await api("/api/tasks/"+id+"/retry",{method:"POST"});await loadTasks();startPolling()}catch(e){alert(e.message)}}
-function startPolling(){clearInterval(poller);poller=setInterval(async()=>{await Promise.all([loadTasks(),loadMetrics()]);const r=await api("/api/tasks");const d=await r.json();if(!d.tasks.some(t=>["queued","running"].includes(t.status)))clearInterval(poller)},1500)}
+function startPolling(){clearInterval(poller);poller=setInterval(async()=>{try{await Promise.all([loadTasks(),loadMetrics()]);const r=await api("/api/tasks");const d=await r.json();if(!d.tasks.some(t=>["queued","running"].includes(t.status)))clearInterval(poller)}catch{clearInterval(poller)}},1500)}
 document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".view").forEach(v=>v.classList.remove("active-view"));$("#"+b.dataset.view).classList.add("active-view");document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));b.classList.add("active")});
 $("#taskForm").addEventListener("submit",e=>{e.preventDefault();submitTask()});
 $("#refresh").onclick=()=>Promise.all([loadTasks(),loadMetrics()]);

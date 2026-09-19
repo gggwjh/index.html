@@ -39,3 +39,6 @@ $("#saveKey").onclick=()=>{sessionStorage.setItem("ai_os_key",$("#apiKey").value
 $("#clearKey").onclick=()=>{sessionStorage.removeItem("ai_os_key");$("#apiKey").value=""};
 Promise.all([loadHealth(),loadEngines(),loadTasks(),loadMetrics()]).catch(e=>console.error(e));
 startPolling();
+
+
+$("#tasksList").addEventListener("click",e=>{const button=e.target.closest("[data-retry-id]");if(button)retryTask(button.dataset.retryId)});

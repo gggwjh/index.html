@@ -12,30 +12,43 @@ User → AI OS UI/API → Orchestrator → Dify / n8n / OpenHands / Browser Use 
 - **Browser Use**: browser execution
 - **LangGraph**: controllable agent orchestration
 
-## Current implementation
-- Dark responsive dashboard.
-- Unified task composer with automatic routing.
-- Engine registry and configuration status.
-- Task lifecycle API.
-- Docker deployment files.
-- Environment-based engine endpoints.
-- Clear separation between orchestration and third-party engines.
+## Included now
+- RTL responsive dark dashboard.
+- Automatic engine routing + manual engine override.
+- Persistent task storage in `data/tasks.json`.
+- Task status, results, errors, attempts and retry endpoint.
+- API-key authentication via `AI_OS_API_KEY`.
+- Request rate limiting and prompt-size limits.
+- Security response headers.
+- Metrics endpoint.
+- Docker + production compose with persistent volume and healthcheck.
+- Node unit tests and GitHub Actions validation.
+- Engine credentials stay server-side and are never returned by the config API.
 
 ## API
-- `GET /health`
+- `GET /health` — public health check
 - `GET /api/engines`
+- `GET /api/config`
+- `GET /api/metrics`
 - `GET /api/tasks`
 - `POST /api/tasks` with `{"prompt":"..." }`
 - `GET /api/tasks/:id`
+- `POST /api/tasks/:id/retry`
+- `DELETE /api/tasks/:id`
+
+When `AI_OS_API_KEY` is set, API routes require either `x-api-key` or `Authorization: Bearer ...`.
 
 ## Run
 ```bash
 cp .env.example .env
 npm install
+npm test
 npm start
 ```
 
 Then open `http://localhost:8787`.
 
-## Important deployment note
-The repository contains the unified control plane, not copies of the five upstream products. Each engine should run as its own service and be connected through its supported API/webhook. Before commercial multi-tenant deployment, review the current license and terms of every upstream project and obtain any required commercial permissions.
+## Production
+Use `docker-compose.prod.yml` for a persistent container volume and healthcheck. Put the service behind HTTPS/reverse proxy and set `AI_OS_API_KEY`.
+
+The repository is the control plane; the five upstream engines remain separate services and must be connected through their supported APIs/webhooks. Review the current license and terms of each upstream project before commercial multi-tenant deployment.

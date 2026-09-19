@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ["ai-os/completion-v2", "main"]
+    branches: ["main"]
   pull_request:
 
 jobs:
@@ -18,4 +18,5 @@ jobs:
       - run: node --check src/index.js
       - run: node --check src/store.js
       - run: node --check src/auth.js
+      - run: node --check public/app.js
       - run: npm test

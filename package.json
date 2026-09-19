@@ -1,6 +1,6 @@
 {
   "name":"ai-os-unified-platform",
-  "version":"0.3.0",
+  "version":"1.0.0",
   "private":true,
   "type":"module",
   "scripts":{"dev":"node --watch src/index.js","start":"node src/index.js","test":"node --test"},

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI OS — Unified AI Workspace</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="dot"></span><div><b>AI OS</b><small>Unified Intelligence</small></div></div>
+    <nav><button class="active">⌂ <span>الرئيسية</span></button><button>✦ <span>المهام</span></button><button>◈ <span>المحركات</span></button><button>⚙ <span>الإعدادات</span></button></nav>
+    <div class="side-note"><b>5 Engines</b><span>نظام توجيه موحّد للمهام</span></div>
+  </aside>
+  <main>
+    <header><div><span class="eyebrow">UNIFIED AI WORKSPACE</span><h1>اعمل أي حاجة.<br><em>AI OS يتصرف.</em></h1></div><div class="health"><i></i> النظام جاهز</div></header>
+    <section class="hero-card">
+      <div class="hero-copy"><span class="pill">ORCHESTRATOR</span><h2>اكتب المطلوب<br>وسيتم اختيار المحرك تلقائيًا</h2><p>من البرمجة والأتمتة إلى البحث والـRAG والـBrowser Agents.</p></div>
+      <form id="taskForm" class="composer">
+        <textarea id="prompt" placeholder="مثال: ابنِ لي صفحة هبوط React لمتجر ملابس..."></textarea>
+        <div class="composer-row"><select id="engine"><option value="">تلقائي — AI OS يختار</option><option value="openhands">OpenHands — Coding</option><option value="browser_use">Browser Use — Web</option><option value="n8n">n8n — Automation</option><option value="dify">Dify — AI / RAG</option><option value="langgraph">LangGraph — Agents</option></select><button>تشغيل المهمة ↗</button></div>
+      </form>
+    </section>
+    <section class="grid">
+      <div class="panel"><div class="panel-head"><h3>المحركات</h3><span id="engineCount">—</span></div><div id="engines" class="engine-list"></div></div>
+      <div class="panel"><div class="panel-head"><h3>آخر المهام</h3><button id="refresh">تحديث</button></div><div id="tasks" class="tasks"></div></div>
+    </section>
+  </main>
+</div>
+<script src="/app.js"></script>
+</body></html>

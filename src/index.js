@@ -68,7 +68,6 @@ async function executeTask(task){
   }catch(error){task.status=error.name==="AbortError"?"timeout":"failed";task.error=error.message;task.completedAt=new Date().toISOString()}
   await saveTask(task);
 }
-function authRoutes(){return ["/api/tasks","/api/engines","/api/config","/api/metrics"].some(p=>p===""+"" )}
 app.get("/health",(_req,res)=>res.json({ok:true,name:process.env.APP_NAME||"AI OS",version:"0.3.0",authRequired:Boolean(process.env.AI_OS_API_KEY),time:new Date().toISOString()}));
 app.get("/api/config",requireAuth,(_req,res)=>res.json({name:process.env.APP_NAME||"AI OS",version:"0.3.0",timeoutMs,authRequired:Boolean(process.env.AI_OS_API_KEY),engines:engineSnapshot()}));
 app.get("/api/engines",requireAuth,(_req,res)=>res.json({engines:engineSnapshot()}));
